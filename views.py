@@ -166,7 +166,7 @@ def get_current_owner():
     return Owner.query.filter_by(
         public_id=decode(
             token, 
-            app.config['SECRET_KEY'])['public_id']
+            app.config['SECRET_KEY'], algorithms="HS256")['public_id']
         ).first()
     
     
@@ -184,5 +184,6 @@ def login():
     token = encode(
         {'public_id': owner.public_id, 
         'exp': datetime.now() + timedelta(minutes=2)},
-        app.config['SECRET_KEY'])
-    return jsonify({'token': token.decode('UTF-8')})
+        app.config['SECRET_KEY'], algorithm="HS256")
+    print(type(token), token)
+    return jsonify({'token': token})

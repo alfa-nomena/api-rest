@@ -13,7 +13,7 @@ def token_required(f):
         if not (token:=request.headers.get('x-access-token')):
             return jsonify({'message': 'Token is missing'}), 401
         try:
-            data = decode(token, app.config['SECRET_KEY'])
+            data = decode(token, app.config['SECRET_KEY'], algorithms="HS256")
         except Exception:
             return jsonify({'message': 'Token invalid'}), 401
         current_user = Owner.query.filter_by(public_id=data['public_id']).first()
